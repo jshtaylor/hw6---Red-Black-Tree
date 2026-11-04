@@ -10,19 +10,16 @@ RedBlackTree:: RedBlackTree(const RedBlackTree&){
 
 } //should be the copy constructor
 
-void RedBlackTree:: TestSimpleConstructor(){
 
-}; //todo this probably needs an input
-
-void RedBlackTree:: TestInsertFirstNode(){
-
-}; // this probably needs in input
-
-void RedBlackTree:: insert(int val){
-
+void RedBlackTree:: Insert(int val){
+    if (root == nullptr){
+        root -> Data = val;
+        root -> Color = COLOR_BLACK;
+    }
+    
 };
 
-bool RedBlackTree:: contains(int val){
+bool RedBlackTree:: Contains(int val){
 
 };
 
@@ -35,6 +32,6 @@ int RedBlackTree:: GetMax(){
 };
 
 int RedBlackTree:: Size(){
-    
+
 };
 

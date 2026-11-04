@@ -3,29 +3,35 @@
 
 using namespace std;
 
+#define COLOR_RED 0;
+#define COLOR_BLACK 1;
+#define COLOR_DOUBLE_BLACK 1; // this is used in the remove algorithm, do it later
+
 struct RBTNode{
-
-
-}
+    //this needs to be implemented before anything else can start tbh
+    int Data;
+    unsigned short Color; //idk if this is the correct data type
+    RBTNode *left = nullptr; //left child
+    RBTNode *right = nullptr; //right child
+};
 
 class RedBlackTree{
+    
     public:
-    RedBlackTree(); //
+    RedBlackTree(); //main constructor
     RedBlackTree(const RedBlackTree&); //should be the copy constructor
-    ~RedBlackTree();
+    ~RedBlackTree();//since we're using pointers throw this in here
 
-    void TestSimpleConstructor(); //todo this probably needs an input
-    void TestInsertFirstNode(); // this probably needs in input
-    void insert(int val);
-    bool contains(int val);
+    void Insert(int val);
+    bool Contains(int val);
     int GetMin();
     int GetMax();
     int Size();
 
     //TODO add the private recursive versions of the two strings
-    string ToInfixString() const {return ToInfixString(root);};
-    string ToPrefixString() const { return ToPrefixString(root);};
-    string ToPostfixString() const { return ToPostfixString(root);};
+    //string ToInfixString() const {return ToInfixString(root);};
+    //string ToPrefixString() const { return ToPrefixString(root);};
+    //string ToPostfixString() const { return ToPostfixString(root);};
 
     private:
     unsigned long long int numItems = 0;
