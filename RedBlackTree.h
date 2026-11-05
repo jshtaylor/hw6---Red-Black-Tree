@@ -3,16 +3,17 @@
 
 using namespace std;
 
-#define COLOR_RED 0;
-#define COLOR_BLACK 1;
-#define COLOR_DOUBLE_BLACK 1; // this is used in the remove algorithm, do it later
+#define COLOR_RED 0
+#define COLOR_BLACK 1
+#define COLOR_DOUBLE_BLACK 1 // this is used in the remove algorithm, do it later
 
 struct RBTNode{
     //this needs to be implemented before anything else can start tbh
-    int Data;
-    unsigned short Color; //idk if this is the correct data type
+    int data;
+    unsigned short color; //idk if this is the correct data type
     RBTNode *left = nullptr; //left child
     RBTNode *right = nullptr; //right child
+    RBTNode *parent= nullptr;
 };
 
 class RedBlackTree{
@@ -27,6 +28,9 @@ class RedBlackTree{
     int GetMin();
     int GetMax();
     int Size();
+
+    RBTNode* GetUncle(RBTNode * node);
+    void InsertFix(RBTNode* node);
 
     //TODO add the private recursive versions of the two strings
     //string ToInfixString() const {return ToInfixString(root);};
