@@ -38,7 +38,6 @@ void RedBlackTree:: Insert(int val){
 
     //move through the tree and insert the newNode where is goes in a BST
     RBTNode * curNode  =  root;
-    numItems++;
     while(curNode != nullptr){
         if(val > curNode -> data){
             if(curNode -> right == nullptr){
@@ -47,7 +46,7 @@ void RedBlackTree:: Insert(int val){
                 break;
             }
             curNode = curNode -> right; 
-        } else {
+        } else if(val < curNode -> right){
             if(curNode -> left == nullptr){
                 curNode -> left = newNode;
                 newNode -> parent = curNode;
@@ -56,6 +55,7 @@ void RedBlackTree:: Insert(int val){
             curNode = curNode -> left;
         }
     }
+    numItems++;
     //here is the evil weird logic that rebalances the whole thing on an insert
     //RBT rebalance algoritm here
     InsertFix(newNode);
@@ -78,7 +78,9 @@ void RedBlackTree:: InsertFix(RBTNode* node){
     }
     RBTNode * uncle = GetUncle(node);
 
-    if ( uncle == nullptr || uncle -> color == COLOR_BLACK){ // this is the case in which we need to start rotating things
+    if ( uncle == nullptr || uncle -> color == COLOR_BLACK){ 
+        //TODO
+        // this is the case in which we need to start rotating things
         //this part needs implementation
 
     }
