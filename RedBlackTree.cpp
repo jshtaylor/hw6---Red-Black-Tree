@@ -46,7 +46,7 @@ void RedBlackTree:: Insert(int val){
                 break;
             }
             curNode = curNode -> right; 
-        } else if(val < curNode -> right){
+        } else if(val < curNode -> data){
             if(curNode -> left == nullptr){
                 curNode -> left = newNode;
                 newNode -> parent = curNode;
