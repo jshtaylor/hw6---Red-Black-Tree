@@ -45,6 +45,9 @@ class RedBlackTree{
     string ToPrefixString(RBTNode * node) const;
     string ToInfixString(RBTNode * node) const;
 
+    void RotateLeft(RBTNode * node);
+    void RotateRight(RBTNode * node);
+
 };
 
 #endif

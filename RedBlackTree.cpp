@@ -5,6 +5,10 @@
 using namespace std;
 
 RedBlackTree:: RedBlackTree(){
+    root = new RBTNode();
+        root ->left = nullptr;
+        root -> right = nullptr;
+        root -> parent = nullptr;
     
 } //main constructor
 RedBlackTree:: RedBlackTree(const RedBlackTree&){
@@ -64,9 +68,8 @@ void RedBlackTree:: Insert(int val){
     //no idea how to make this part memory safe
 }
 
-    
-
 void RedBlackTree:: InsertFix(RBTNode* node){
+    //recursive function due to nature of bubbling up    
     //this is the weird evil place where the recolor and rotations should be happening
     if(node -> parent == nullptr || node == nullptr){ // this means you're at the root, i.e. base case
         if(node != nullptr){
@@ -129,7 +132,52 @@ RBTNode* RedBlackTree:: GetUncle(RBTNode * node){
     }
 }
 
+void RedBlackTree:: RotateLeft(RBTNode * node){
+    RBTNode * y = node -> right; // couldn't think of a helpful name tbh
+    node -> right = y -> left;
+    if (y -> left != nullptr){
+        y -> left -> parent = node;
+    }
 
+    y -> parent = node -> parent; // connect parents so they can swap children/sibilings
+
+    if(node -> parent == nullptr){
+        root = y; // new root
+    }
+    else if(node == node -> parent -> left) {
+        node -> parent -> left = y;
+    }else {
+        node -> parent -> right = y;
+    }
+
+    y -> left = node;
+    node -> parent = y;
+    return; 
+}
+
+void RedBlackTree:: RotateRight(RBTNode * node){
+    RBTNode * x = node -> left; // again no good variable names
+    node -> left = x -> right;
+
+    if(x -> right != nullptr){
+        x -> right -> parent = node;
+    }
+
+    x -> parent = node -> parent; // link parents
+
+    if(node -> parent == nullptr){
+        root = x; // new root
+    }
+    else if(node == node -> parent -> right){
+        node -> parent -> right = x;
+    } else{
+        node -> parent -> left = x;
+    }
+
+    x -> right = node;
+    node -> parent = x;
+    return;
+}
 
 bool RedBlackTree:: Contains(int val){ 
     //doing this recursively would be more elegant but I don't really feel like writing a helper functiom
@@ -215,7 +263,7 @@ int RedBlackTree:: Size(){
         // Combine in Root-Left-Right order
         return currentStr + leftStr + rightStr;
     }
-    
+
     string RedBlackTree:: ToInfixString(RBTNode * node) const{
         if (node == nullptr) {
             return "";
