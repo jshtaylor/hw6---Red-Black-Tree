@@ -4,17 +4,25 @@
 
 using namespace std;
 
-RedBlackTree:: RedBlackTree(){
+RedBlackTree:: RedBlackTree(){//empty constructor
+    root = nullptr;
+}
+RedBlackTree:: RedBlackTree(int val){ // works with a root
     root = new RBTNode();
-        root ->left = nullptr;
-        root -> right = nullptr;
-        root -> parent = nullptr;
-    
-} //main constructor
-RedBlackTree:: RedBlackTree(const RedBlackTree&){
+    root->data = val;
+    root->color = COLOR_BLACK;
+    root ->left = nullptr;
+    root -> right = nullptr;
+    root -> parent = nullptr;
+    numItems ++;
+}
 
-} //should be the copy constructor
+RedBlackTree:: RedBlackTree(const RedBlackTree&){//should be the copy constructor
 
+} 
+
+RedBlackTree:: ~RedBlackTree(){ // destructor
+}
 
 void RedBlackTree:: Insert(int val){
     if(Contains(val)){ // checks for duplicates, if dup, end here
@@ -81,18 +89,53 @@ void RedBlackTree:: InsertFix(RBTNode* node){
         //yay yippee hooray we're lucky
         return;
     }
-    RBTNode * uncle = GetUncle(node);
+
+    RBTNode * uncle = GetUncle(node); // grab all of the familial relations here just in case they are needed later. They are
+    RBTNode* parent = node->parent;
+    RBTNode* grandparent = parent->parent;
 
     if ( uncle == nullptr || uncle -> color == COLOR_BLACK){ 
         //TODO
         // this is the case in which we need to start rotating things
         //this part needs implementation
 
+        //Left Side - both LL & LR
+
+        if(parent == grandparent -> left){
+
+            //LR case, double rotation, this first since its a conditional double rotationa and doing this than following it is better
+            if(node == parent -> right){
+                RotateLeft(parent);
+                RBTNode * temp = parent;
+                parent = node; // shifts points to match the new LL sturcture
+                node = temp;
+                delete temp;
+            }
+
+            //LL case single rotation
+            parent -> color = COLOR_BLACK;
+            grandparent -> color = COLOR_RED;
+            RotateRight(grandparent);
+        } else { //right side case - RL and RR
+            //RL case - Double rotation, this first since its a conditional double rotationa and doing this than following it is better
+            if(node == parent -> left){
+                RotateRight(parent);
+                RBTNode * temp = parent;
+                parent = node; // shifts points to match the new RR sturcture
+                node = temp;
+                delete temp;
+            }
+
+            //RR case - single rotation
+
+            parent -> color = COLOR_BLACK;
+            grandparent -> color = COLOR_RED;
+            RotateLeft(grandparent);
+        }
     }
     else
     { // case when uncle is red, turn parent and uncle black and iterate up the tree
-        RBTNode* parent = node->parent;
-        RBTNode* grandparent = parent->parent; 
+
         
         //set these to black
         parent -> color = COLOR_BLACK;
@@ -240,7 +283,8 @@ int RedBlackTree:: Size(){
         string rightStr = ToPostfixString(node->right);
 
         // 3. Process current node data
-        string currentStr = std::to_string(node->data) + " ";
+        string colorChar = (node->color == COLOR_BLACK) ? "B" : "R";
+        string currentStr = " " + colorChar + to_string(node->data) + " ";
 
         // Combine in Left-Right-Root order
         return leftStr + rightStr + currentStr;
@@ -252,7 +296,8 @@ int RedBlackTree:: Size(){
         }
 
         // 1. Process current node data
-        string currentStr = std::to_string(node->data) + " ";
+        string colorChar = (node->color == COLOR_BLACK) ? "B" : "R";
+        string currentStr = " " + colorChar + to_string(node->data) + " ";
 
         // 2. Process left subtree
         string leftStr = ToPrefixString(node->left);
@@ -273,7 +318,8 @@ int RedBlackTree:: Size(){
         string leftStr = ToInfixString(node->left);
 
         // 2. Process current node data
-        string currentStr = std::to_string(node->data) + " ";
+        string colorChar = (node->color == COLOR_BLACK) ? "B" : "R";
+        string currentStr = " " + colorChar + to_string(node->data) + " ";
 
         // 3. Process right subtree
         string rightStr = ToInfixString(node->right);
@@ -281,4 +327,3 @@ int RedBlackTree:: Size(){
         // Combine in Left-Root-Right order
         return leftStr + currentStr + rightStr;
     }
-

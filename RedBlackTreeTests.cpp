@@ -58,21 +58,30 @@ void TestInsertThirdNode(){
 	rbt->Insert(30);
 	rbt->Insert(15);
 	rbt->Insert(10); // Left Left
-	//cout << "rbt: "  << rbt->ToPrefixString() << endl;
+	cout << "rbt: "  << rbt->ToPrefixString() << endl;
 	assert(rbt->ToPrefixString() == " B15  R10  R30 ");
+	//cout << "pre delete \n";
 	delete rbt;
+	//cout << "post delete \n";
 	
 	rbt = new RedBlackTree(); 
+	//cout << "new tree \n";
 	rbt->Insert(30);
 	rbt->Insert(15);
 	rbt->Insert(25); // Right Left
+	//cout << "after insertion \n";
+	cout << rbt -> ToPrefixString() << rbt -> ToPostfixString() << rbt -> ToInfixString() << endl;
+	cout << "print issue? \n";
+	cout << "rbt: "  << rbt->ToPrefixString() << endl;
 	assert(rbt->ToPrefixString() == " B25  R15  R30 ");
 	delete rbt;
+
 	
 	rbt = new RedBlackTree();
 	rbt->Insert(30);
 	rbt->Insert(15);
 	rbt->Insert(45); // Easy case
+	cout << "rbt: "  << rbt->ToPrefixString() << endl;
 	assert(rbt->ToPrefixString() == " B30  R15  R45 ");
 	delete rbt;
 	

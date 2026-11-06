@@ -1,5 +1,6 @@
 #ifndef REDBLACKTREE_H
 #define REDBLACKTREE_H
+#include <string>
 
 using namespace std;
 
@@ -20,6 +21,7 @@ class RedBlackTree{
     
     public:
     RedBlackTree(); //main constructor
+    RedBlackTree(int val);
     RedBlackTree(const RedBlackTree&); //should be the copy constructor
     ~RedBlackTree();//since we're using pointers throw this in here
 
