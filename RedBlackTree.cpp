@@ -59,7 +59,9 @@ void RedBlackTree:: Insert(int val){
     //here is the evil weird logic that rebalances the whole thing on an insert
     //RBT rebalance algoritm here
     InsertFix(newNode);
-        
+    
+
+    //no idea how to make this part memory safe
 }
 
     
@@ -107,7 +109,8 @@ void RedBlackTree:: InsertFix(RBTNode* node){
     } 
 }
 
-RBTNode* RedBlackTree:: GetUncle(RBTNode * node){
+RBTNode* RedBlackTree:: GetUncle(RBTNode * node){ 
+    // not yet certain how to make this one memory safe, that may be later or in the destructor not in this function since it returns an RBTnode pointer
     // Guard against nullptr for node, parent, or grandparent
     if (node == nullptr || node->parent == nullptr || node->parent->parent == nullptr) {
         return nullptr;
@@ -144,6 +147,7 @@ bool RedBlackTree:: Contains(int val){
             curNode = curNode -> left;
         }
     }
+    //delet pointer here
     return false;
 }
 
@@ -155,6 +159,7 @@ int RedBlackTree:: GetMin(){
             curNode = curNode -> left;
         }
     }
+    //delet pointer after assigning the data to an int
     return curNode -> data;
 }
 
@@ -166,10 +171,66 @@ int RedBlackTree:: GetMax(){
             curNode = curNode -> right;
         }
     }
+
+    //delet pointer after assigning the data to an int
     return curNode -> data;
 }
 
 int RedBlackTree:: Size(){
     return numItems;
 };
+
+    string RedBlackTree:: ToPostfixString(RBTNode * node) const{
+        // Base case: empty subtree produces empty string
+        if (node == nullptr) {
+            return "";
+        }
+        // 1. Process left subtree
+        string leftStr = ToPostfixString(node->left);
+
+        // 2. Process right subtree
+        string rightStr = ToPostfixString(node->right);
+
+        // 3. Process current node data
+        string currentStr = std::to_string(node->data) + " ";
+
+        // Combine in Left-Right-Root order
+        return leftStr + rightStr + currentStr;
+    }
+
+    string RedBlackTree:: ToPrefixString(RBTNode * node) const{
+        if (node == nullptr) {
+        return "";
+        }
+
+        // 1. Process current node data
+        string currentStr = std::to_string(node->data) + " ";
+
+        // 2. Process left subtree
+        string leftStr = ToPrefixString(node->left);
+
+        // 3. Process right subtree
+        string rightStr = ToPrefixString(node->right);
+
+        // Combine in Root-Left-Right order
+        return currentStr + leftStr + rightStr;
+    }
+    
+    string RedBlackTree:: ToInfixString(RBTNode * node) const{
+        if (node == nullptr) {
+            return "";
+        }
+
+        // 1. Process left subtree
+        string leftStr = ToInfixString(node->left);
+
+        // 2. Process current node data
+        string currentStr = std::to_string(node->data) + " ";
+
+        // 3. Process right subtree
+        string rightStr = ToInfixString(node->right);
+
+        // Combine in Left-Root-Right order
+        return leftStr + currentStr + rightStr;
+    }
 

@@ -33,13 +33,18 @@ class RedBlackTree{
     void InsertFix(RBTNode* node);
 
     //TODO add the private recursive versions of the two strings
-    //string ToInfixString() const {return ToInfixString(root);};
-    //string ToPrefixString() const { return ToPrefixString(root);};
-    //string ToPostfixString() const { return ToPostfixString(root);};
+    string ToInfixString() const { return ToInfixString(root);};
+    string ToPrefixString() const { return ToPrefixString(root);};
+    string ToPostfixString() const { return ToPostfixString(root);};
 
     private:
     unsigned long long int numItems = 0;
     RBTNode *root = nullptr; //TODO write RBTNode struct 
+
+    string ToPostfixString(RBTNode * node) const;
+    string ToPrefixString(RBTNode * node) const;
+    string ToInfixString(RBTNode * node) const;
+
 };
 
 #endif
