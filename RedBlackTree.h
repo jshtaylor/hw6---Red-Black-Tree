@@ -29,7 +29,7 @@ class RedBlackTree{
     int GetMax();
     int Size();
 
-    RBTNode* GetUncle(RBTNode * node);
+
     void InsertFix(RBTNode* node);
 
     //TODO add the private recursive versions of the two strings
@@ -47,6 +47,7 @@ class RedBlackTree{
 
     void RotateLeft(RBTNode * node);
     void RotateRight(RBTNode * node);
+    RBTNode* GetUncle(RBTNode * node);
 
 };
 
