@@ -22,7 +22,7 @@ class RedBlackTree{
     public:
     RedBlackTree(); //main constructor
     RedBlackTree(int val);
-    RedBlackTree(const RedBlackTree&); //should be the copy constructor
+    RedBlackTree(const RedBlackTree& rbtSource); //should be the copy constructor
     ~RedBlackTree();//since we're using pointers throw this in here
 
     void Insert(int val);
@@ -50,6 +50,7 @@ class RedBlackTree{
     void RotateLeft(RBTNode * node);
     void RotateRight(RBTNode * node);
     RBTNode* GetUncle(RBTNode * node);
+    RBTNode* CopySubTree(RBTNode const * node, RBTNode * parent); // for the copy contructor
 
 };
 

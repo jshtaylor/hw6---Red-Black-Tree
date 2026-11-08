@@ -17,9 +17,31 @@ RedBlackTree:: RedBlackTree(int val){ // works with a root
     numItems ++;
 }
 
-RedBlackTree:: RedBlackTree(const RedBlackTree&){//should be the copy constructor
+RedBlackTree:: RedBlackTree(const RedBlackTree& rbtSource){//should be the copy constructor
+    numItems = rbtSource.numItems;
 
+    if(rbtSource.root == nullptr){
+        return;
+    }
+
+    root = CopySubTree(rbtSource.root, NULL);
 } 
+
+RBTNode* RedBlackTree:: CopySubTree(RBTNode const * node, RBTNode * parent){
+    if(node == nullptr){
+        return nullptr;
+    }
+
+    RBTNode * newNode = new RBTNode();
+    newNode -> color = node -> color;
+    newNode -> parent = node -> parent;
+    newNode -> data = node -> data;
+
+    newNode -> left = CopySubTree(node -> left, newNode);
+    newNode -> right = CopySubTree(node -> right, newNode);
+
+    return newNode;
+}
 
 RedBlackTree:: ~RedBlackTree(){ // destructor
 }
@@ -95,23 +117,18 @@ void RedBlackTree:: InsertFix(RBTNode* node){
     RBTNode* grandparent = parent->parent;
 
     if ( uncle == nullptr || uncle -> color == COLOR_BLACK){ 
-        //TODO
         // this is the case in which we need to start rotating things
         //this part needs implementation
-
         //Left Side - both LL & LR
-
         if(parent == grandparent -> left){
-
             //LR case, double rotation, this first since its a conditional double rotationa and doing this than following it is better
             if(node == parent -> right){
                 RotateLeft(parent);
                 RBTNode * temp = parent;
                 parent = node; // shifts points to match the new LL sturcture
                 node = temp;
-                delete temp;
-            }
 
+            }
             //LL case single rotation
             parent -> color = COLOR_BLACK;
             grandparent -> color = COLOR_RED;
@@ -123,11 +140,9 @@ void RedBlackTree:: InsertFix(RBTNode* node){
                 RBTNode * temp = parent;
                 parent = node; // shifts points to match the new RR sturcture
                 node = temp;
-                delete temp;
+
             }
-
             //RR case - single rotation
-
             parent -> color = COLOR_BLACK;
             grandparent -> color = COLOR_RED;
             RotateLeft(grandparent);
@@ -135,19 +150,14 @@ void RedBlackTree:: InsertFix(RBTNode* node){
     }
     else
     { // case when uncle is red, turn parent and uncle black and iterate up the tree
-
-        
         //set these to black
         parent -> color = COLOR_BLACK;
         uncle -> color = COLOR_BLACK;
-
         //G parent to red
         if(grandparent != nullptr){
             grandparent -> color = COLOR_RED;
-
             InsertFix(grandparent);
         }
-        
         if(root != nullptr){
             //root must always be black
             root -> color = COLOR_BLACK;
@@ -161,10 +171,8 @@ RBTNode* RedBlackTree:: GetUncle(RBTNode * node){
     if (node == nullptr || node->parent == nullptr || node->parent->parent == nullptr) {
         return nullptr;
     }
-
     RBTNode* parent = node->parent;
     RBTNode* grandparent = parent->parent;
-
     // If parent is grandparent's left child, uncle is right child
     if (parent == grandparent->left) {
         return grandparent->right;
@@ -181,9 +189,7 @@ void RedBlackTree:: RotateLeft(RBTNode * node){
     if (y -> left != nullptr){
         y -> left -> parent = node;
     }
-
     y -> parent = node -> parent; // connect parents so they can swap children/sibilings
-
     if(node -> parent == nullptr){
         root = y; // new root
     }
@@ -192,7 +198,6 @@ void RedBlackTree:: RotateLeft(RBTNode * node){
     }else {
         node -> parent -> right = y;
     }
-
     y -> left = node;
     node -> parent = y;
     return; 
@@ -201,13 +206,10 @@ void RedBlackTree:: RotateLeft(RBTNode * node){
 void RedBlackTree:: RotateRight(RBTNode * node){
     RBTNode * x = node -> left; // again no good variable names
     node -> left = x -> right;
-
     if(x -> right != nullptr){
         x -> right -> parent = node;
     }
-
     x -> parent = node -> parent; // link parents
-
     if(node -> parent == nullptr){
         root = x; // new root
     }
@@ -216,7 +218,6 @@ void RedBlackTree:: RotateRight(RBTNode * node){
     } else{
         node -> parent -> left = x;
     }
-
     x -> right = node;
     node -> parent = x;
     return;
@@ -225,9 +226,7 @@ void RedBlackTree:: RotateRight(RBTNode * node){
 bool RedBlackTree:: Contains(int val){ 
     //doing this recursively would be more elegant but I don't really feel like writing a helper functiom
     //that being the case while loop it is
-
     RBTNode * curNode = root;
-
     while(curNode != nullptr){
         if(curNode -> data == val){
             return true;
@@ -244,26 +243,31 @@ bool RedBlackTree:: Contains(int val){
 
 int RedBlackTree:: GetMin(){
     //min will always be leftmost since its a BST, again no recursion b/c I dont wanna write a helper functions
+    if(root == nullptr){
+        throw runtime_error(" GetMin Called on empty tree");
+    }
     RBTNode * curNode = root;
-    while(curNode != nullptr){
+    while(curNode -> left != nullptr){
         if(curNode -> left != nullptr){
             curNode = curNode -> left;
         }
     }
-    //delet pointer after assigning the data to an int
+
     return curNode -> data;
 }
 
 int RedBlackTree:: GetMax(){
     //max will always be right most since its a BST, again no recursion b/c I dont wanna write a helper functions
+    if(root == nullptr){
+        throw runtime_error(" GetMax Called on empty tree");
+    }    
     RBTNode * curNode = root;
-    while(curNode != nullptr){
+    while(curNode -> right != nullptr){
         if(curNode -> right != nullptr){
             curNode = curNode -> right;
         }
     }
 
-    //delet pointer after assigning the data to an int
     return curNode -> data;
 }
 

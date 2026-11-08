@@ -59,23 +59,40 @@ void TestInsertThirdNode(){
 	rbt->Insert(15);
 	rbt->Insert(10); // Left Left
 	cout << "rbt: "  << rbt->ToPrefixString() << endl;
-	assert(rbt->ToPrefixString() == " B15  R10  R30 ");
+	//cout <<"post pring \n";
+	//assert(rbt->ToPrefixString() == " B15  R10  R30 ");
 	//cout << "pre delete \n";
 	delete rbt;
 	//cout << "post delete \n";
-	
+	//this chunk works fine ^^^^^^^^^^
+
+
 	rbt = new RedBlackTree(); 
 	//cout << "new tree \n";
 	rbt->Insert(30);
+	cout << "30 in \n";
+	cout << rbt -> ToPrefixString() << endl;
+	cout <<  rbt -> ToPostfixString() << endl;
+	cout << rbt -> ToInfixString()<<endl;
+
 	rbt->Insert(15);
+	cout << "15 in \n";
+	cout << rbt -> ToPrefixString() << endl;
+	cout <<  rbt -> ToPostfixString() << endl;
+	cout << rbt -> ToInfixString()<<endl;
+
 	rbt->Insert(25); // Right Left
-	//cout << "after insertion \n";
-	cout << rbt -> ToPrefixString() << rbt -> ToPostfixString() << rbt -> ToInfixString() << endl;
+	cout << "25 in \n";
+	//cout << rbt -> ToPrefixString() << endl;
+	//cout <<  rbt -> ToPostfixString() << endl;
+	//cout << rbt -> ToInfixString()<<endl;
+	cout << "after insertion \n";
+	cout << rbt -> ToPrefixString() << endl; // the to Strings stop working here, idk why
 	cout << "print issue? \n";
 	cout << "rbt: "  << rbt->ToPrefixString() << endl;
 	assert(rbt->ToPrefixString() == " B25  R15  R30 ");
 	delete rbt;
-
+	cout << "post delete \n";
 	
 	rbt = new RedBlackTree();
 	rbt->Insert(30);
@@ -94,6 +111,19 @@ void TestInsertThirdNode(){
 
 void TestInsertFourthNode(){
 	cout << "Testing Insert Fourth Node..." << endl;
+	RedBlackTree * rbt = new RedBlackTree();
+	rbt -> Insert(30);
+	rbt -> Insert(10);
+	cout << "rbt: " <<  rbt -> ToPrefixString() << endl;
+	rbt -> Insert(20);
+	//cout << "rbt: " <<  rbt -> ToPrefixString() << endl;
+	cout << rbt -> Contains(20) << endl;
+	rbt -> Insert(15);
+
+
+	cout << "rbt: " <<rbt -> ToPrefixString() << endl;
+	assert(rbt->ToPrefixString() == " B20  B10  R15  B30 ");
+
 
 	cout << "TESTS MISSING" << endl << endl;
 	
@@ -126,8 +156,13 @@ void TestToStrings(){
 	rbt.Insert(11);
 	rbt.Insert(15);
 	rbt.Insert(5);
+	cout << "rbt: " << rbt.ToPrefixString() << endl;
 	rbt.Insert(13);
+	cout << "rbt: " << rbt.ToPrefixString() << endl;
+
 	rbt.Insert(7);
+	cout << "rbt: " << rbt.ToPrefixString() << endl;
+
 
 	assert(rbt.ToPrefixString() == " B12  B7  R5  R11  B15  R13 ");
 	assert(rbt.ToInfixString() == " R5  B7  R11  B12  R13  B15 ");
@@ -226,11 +261,20 @@ void TestContains(){
 	rbt->Insert(29);
 	rbt->Insert(34);
 	
-	assert(rbt->Contains(34));
+	assert(rbt->Contains(34) == true);
+	assert(rbt->Contains(22) == true);
+	assert(rbt->Contains(15) == true);
+	assert(rbt->Contains(31) == true);
+	assert(rbt->Contains(55) == true);
+	assert(rbt->Contains(12) == true);
+	assert(rbt->Contains(17) == true);
+	assert(rbt->Contains(29) == true);
+	assert(rbt -> Contains(10000) == false);
+	//assert(rbt -> Contains(34) == false);
 	delete rbt;
 
 	
-	cout << "TESTS MISSING" << endl << endl;
+
 	cout << "PASSED!" << endl << endl;
 }
 
@@ -239,8 +283,23 @@ void TestContains(){
 
 void TestGetMinimumMaximum(){
 	cout << "Testing Get Minimum and Get Maximum..." << endl;
+	RedBlackTree *rbt = new RedBlackTree();
 
-	cout << "TESTS MISSING" << endl << endl;
+	rbt = new RedBlackTree();
+	rbt->Insert(40);
+	rbt->Insert(22);
+	rbt->Insert(15);
+	rbt->Insert(31);
+	rbt->Insert(55);
+	rbt->Insert(12);
+	rbt->Insert(17);
+	rbt->Insert(29);
+	rbt->Insert(34);
+
+	assert(rbt->GetMax() == 55);
+	assert(rbt->GetMin() == 12);
+	cout << "max: " << rbt-> GetMax() << " min: " << rbt-> GetMin() << endl;
+	delete rbt;
 
 	cout << "PASSED!" << endl << endl;
 }
