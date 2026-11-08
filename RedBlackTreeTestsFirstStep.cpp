@@ -20,7 +20,7 @@ using namespace std;
 void TestSimpleConstructor(){
 	cout << "Testing Simple Constructor... " << endl;
 	RedBlackTree rbt = RedBlackTree();
-	//cout << "empty r-b-tree: " << rbt.ToInfixString() << endl;
+	cout << "empty r-b-tree: " << rbt.ToInfixString() << endl;
 	assert(rbt.ToInfixString() == "");
 	
 	cout << "PASSED!"<< endl << endl;
@@ -31,7 +31,7 @@ void TestInsertFirstNode(){
 	cout << "Testing Insert One Node..." << endl;
 	RedBlackTree rbt = RedBlackTree();
 	rbt.Insert(30);
-	//cout << "rbt: " << rbt.ToPrefixString() << endl;
+	cout << "rbt: " << rbt.ToPrefixString() << endl;
 	assert(rbt.ToInfixString() == " B30 ");
 
 	cout << "PASSED!" << endl << endl;
