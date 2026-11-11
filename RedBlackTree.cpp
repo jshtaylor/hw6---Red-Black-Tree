@@ -223,6 +223,47 @@ void RedBlackTree:: RotateRight(RBTNode * node){
     return;
 }
 
+void RedBlackTree:: Remove(int val){
+    RBTNode * curNode = root;
+    while(curNode != nullptr && curNode -> data != val){
+        //search the tree to find to find the node with the data we want
+        //need a way to check if we've gone through the whole tree, maybe a for each loop or something idk
+        if(curNode -> data == val){ // ripped this code from Contains()
+            break;
+        }
+        if(val > curNode -> data){
+            curNode = curNode -> right;
+        } else{
+            curNode = curNode -> left;
+        }
+    }
+    if(curNode == nullptr){
+        throw invalid_argument("Input value does not exist in the RBT\n"); 
+    }
+    RBTNode * leftChild = curNode -> left;
+    RBTNode * rightChild = curNode -> right;
+    RBTNode * parent = curNode -> parent;
+    if(leftChild == nullptr && rightChild == nullptr){
+        //no children if its a red node I think you can just delete and move on, if its a black node you might need to fuck around some
+        
+        //probably call insert fix on the parent to make sure things are still balanced
+    }
+    if(parent == nullptr){
+        //we're at the root, pick on child to become the new root and run an insert fix from somewhere?
+
+    }
+    else if(parent -> left = curNode){
+        //parent -> left = i think you could pick either chil here but I'm not certain, follow with fix 
+        //delete the node
+    }
+    else{
+        //parent -> left = child; again link the child of the node to a the parent, I still think it doesn't particularly matter which child mvoes up but I should check
+        //delete the node
+    }
+    
+
+}
+
 bool RedBlackTree:: Contains(int val){ 
     //doing this recursively would be more elegant but I don't really feel like writing a helper functiom
     //that being the case while loop it is

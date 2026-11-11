@@ -30,7 +30,7 @@ class RedBlackTree{
     int GetMin();
     int GetMax();
     unsigned long long int Size();
-
+    void Remove(int val);
 
 
     //TODO add the private recursive versions of the two strings
