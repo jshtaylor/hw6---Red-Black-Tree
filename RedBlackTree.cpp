@@ -271,7 +271,7 @@ int RedBlackTree:: GetMax(){
     return curNode -> data;
 }
 
-int RedBlackTree:: Size(){
+unsigned long long int RedBlackTree:: Size(){
     return numItems;
 };
 

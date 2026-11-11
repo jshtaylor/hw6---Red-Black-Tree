@@ -29,7 +29,7 @@ class RedBlackTree{
     bool Contains(int val);
     int GetMin();
     int GetMax();
-    int Size();
+    unsigned long long int Size();
 
 
     void InsertFix(RBTNode* node);
