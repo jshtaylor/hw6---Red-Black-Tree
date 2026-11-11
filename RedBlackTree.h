@@ -32,7 +32,6 @@ class RedBlackTree{
     unsigned long long int Size();
 
 
-    void InsertFix(RBTNode* node);
 
     //TODO add the private recursive versions of the two strings
     string ToInfixString() const { return ToInfixString(root);};
@@ -47,6 +46,7 @@ class RedBlackTree{
     string ToPrefixString(RBTNode * node) const;
     string ToInfixString(RBTNode * node) const;
 
+    void InsertFix(RBTNode* node);
     void RotateLeft(RBTNode * node);
     void RotateRight(RBTNode * node);
     RBTNode* GetUncle(RBTNode * node);
