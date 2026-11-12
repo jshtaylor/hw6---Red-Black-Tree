@@ -246,9 +246,9 @@ void RedBlackTree:: Remove(int val){
         }
         curNode -> data = IOS -> data; // copy ios data
         curNode = IOS; // we'll need to call remove on the IOS at a later point, probably
-        IOS -> color = COLOR_DOUBLE_BLACK;
     }
-
+    short deletedColor = curNode -> color;
+    RBTNode * parent = curNode -> parent;
     RBTNode* child = (curNode->left != nullptr) ? curNode->left : curNode->right;
 
     if(child != nullptr){
@@ -257,11 +257,15 @@ void RedBlackTree:: Remove(int val){
     if(curNode -> parent == nullptr){
         root = child; // this is the case when we're removing the root of the tree
     }else if(curNode == curNode -> parent -> left){
-        curNode -> parent -> left = child;
+        parent -> left = child;
     }else{
-        curNode -> parent -> right = child;
+        parent -> right = child;
     }
-    delete curNode;
+    delete curNode; // kill the node
+    //if the deleted node was red we don't needa do shit
+    if(deletedColor == COLOR_BLACK){
+        RemoveFix(child, parent);
+    }
 }
 
 void RedBlackTree:: RemoveFix(RBTNode * cur, RBTNode * parent){
