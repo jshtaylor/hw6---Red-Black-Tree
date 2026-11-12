@@ -284,6 +284,27 @@ void RedBlackTree:: RemoveFix(RBTNode * cur, RBTNode * parent){
 
 void RedBlackTree:: FixDoubleBlack(RBTNode * cur, RBTNode * parent){
     //TODO
+    RBTNode * sibling;
+    if(parent -> left == cur){
+        sibling = parent -> right;
+    }else{
+        sibling = parent -> left;
+    } 
+
+    if(sibling -> color == COLOR_RED){
+        //this should be the fix for a red sibling
+        //rotates it so that we end up in a black sibling situation and than we go to the black
+        //sibling situation
+        parent -> color = COLOR_RED;
+        sibling -> color = COLOR_BLACK;
+        if(parent -> left = sibling){
+            RotateRight(parent);
+        } else{RotateLeft(parent);}
+        parent = cur -> parent;
+        FixDoubleBlack(cur, parent);
+    }
+    //red sibling case
+
 }
 
 
