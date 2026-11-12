@@ -226,11 +226,6 @@ void RedBlackTree:: RotateRight(RBTNode * node){
 void RedBlackTree:: Remove(int val){
     RBTNode * curNode = root;
     while(curNode != nullptr && curNode -> data != val){
-        //search the tree to find to find the node with the data we want
-        //need a way to check if we've gone through the whole tree, maybe a for each loop or something idk
-        if(curNode -> data == val){ // ripped this code from Contains()
-            break;
-        }
         if(val > curNode -> data){
             curNode = curNode -> right;
         } else{
@@ -240,29 +235,53 @@ void RedBlackTree:: Remove(int val){
     if(curNode == nullptr){
         throw invalid_argument("Input value does not exist in the RBT\n"); 
     }
-    RBTNode * leftChild = curNode -> left;
-    RBTNode * rightChild = curNode -> right;
-    RBTNode * parent = curNode -> parent;
-    if(leftChild == nullptr && rightChild == nullptr){
-        //no children if its a red node I think you can just delete and move on, if its a black node you might need to fuck around some
-        
-        //probably call insert fix on the parent to make sure things are still balanced
-    }
-    if(parent == nullptr){
-        //we're at the root, pick on child to become the new root and run an insert fix from somewhere?
+    //atp will need to keep track of the color of the node and if the node is red we can delete w/o needing to fix anything
+    //if the delted node is black we need to use a fix function
 
+    if(curNode -> left != nullptr && curNode -> right != nullptr){
+        //two child case, this is the one where we need to find the IOS and than do that whole thing
+        RBTNode * IOS = curNode -> right;
+        while(IOS -> left != nullptr){
+            IOS = IOS -> left;
+        }
+        curNode -> data = IOS -> data; // copy ios data
+        curNode = IOS; // we'll need to call remove on the IOS at a later point, probably
+        IOS -> color = COLOR_DOUBLE_BLACK;
     }
-    else if(parent -> left = curNode){
-        //parent -> left = i think you could pick either chil here but I'm not certain, follow with fix 
-        //delete the node
-    }
-    else{
-        //parent -> left = child; again link the child of the node to a the parent, I still think it doesn't particularly matter which child mvoes up but I should check
-        //delete the node
-    }
-    
 
+    RBTNode* child = (curNode->left != nullptr) ? curNode->left : curNode->right;
+
+    if(child != nullptr){
+        child -> parent = curNode -> parent;
+    }
+    if(curNode -> parent == nullptr){
+        root = child; // this is the case when we're removing the root of the tree
+    }else if(curNode == curNode -> parent -> left){
+        curNode -> parent -> left = child;
+    }else{
+        curNode -> parent -> right = child;
+    }
+    delete curNode;
 }
+
+void RedBlackTree:: RemoveFix(RBTNode * cur, RBTNode * parent){
+    if(cur == root){
+        if(cur != nullptr){
+            cur -> color = COLOR_BLACK;
+        }
+        return;
+    }
+    if( cur != nullptr && cur -> color == COLOR_RED){
+        cur->color = COLOR_BLACK;
+        return;
+    }
+    FixDoubleBlack(cur, parent);
+}
+
+void RedBlackTree:: FixDoubleBlack(RBTNode * cur, RBTNode * parent){
+    //TODO
+}
+
 
 bool RedBlackTree:: Contains(int val){ 
     //doing this recursively would be more elegant but I don't really feel like writing a helper functiom

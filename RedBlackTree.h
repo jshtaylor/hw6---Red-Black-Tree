@@ -6,7 +6,7 @@ using namespace std;
 
 #define COLOR_RED 0
 #define COLOR_BLACK 1
-#define COLOR_DOUBLE_BLACK 1 // this is used in the remove algorithm, do it later
+#define COLOR_DOUBLE_BLACK 2 // this is used in the remove algorithm, do it later
 
 struct RBTNode{
     //this needs to be implemented before anything else can start tbh
@@ -46,6 +46,8 @@ class RedBlackTree{
     string ToPrefixString(RBTNode * node) const;
     string ToInfixString(RBTNode * node) const;
 
+    void FixDoubleBlack(RBTNode * cur, RBTNode * parent);
+    void RemoveFix(RBTNode * cur, RBTNode * parent);
     void InsertFix(RBTNode* node);
     void RotateLeft(RBTNode * node);
     void RotateRight(RBTNode * node);
