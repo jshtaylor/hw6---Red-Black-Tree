@@ -269,6 +269,7 @@ RBTNode * RedBlackTree:: RemoveReplace(RBTNode * D){
     } else{
         parent -> right = R;
     }
+    numItems --;
     delete D;
     return R;
 }
