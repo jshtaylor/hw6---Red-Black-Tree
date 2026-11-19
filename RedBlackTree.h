@@ -47,7 +47,12 @@ class RedBlackTree{
     string ToInfixString(RBTNode * node) const;
 
     void FixDoubleBlack(RBTNode * cur, RBTNode * parent);
-    void RemoveFix(RBTNode * cur, RBTNode * parent);
+    RBTNode * RemoveReplace(RBTNode * D);
+    void RemoveCheck(short DColor, RBTNode * R);
+    RBTNode * GetIOS(RBTNode * cur);
+    
+    
+    void RemoveFix(RBTNode * cur, RBTNode * parent); // this isn't in use atm
     void InsertFix(RBTNode* node);
     void RotateLeft(RBTNode * node);
     void RotateRight(RBTNode * node);

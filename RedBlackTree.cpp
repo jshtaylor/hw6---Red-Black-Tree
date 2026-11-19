@@ -224,88 +224,171 @@ void RedBlackTree:: RotateRight(RBTNode * node){
 }
 
 void RedBlackTree:: Remove(int val){
-    RBTNode * curNode = root;
-    while(curNode != nullptr && curNode -> data != val){
-        if(val > curNode -> data){
-            curNode = curNode -> right;
+    //starts by getting the node we're removing
+    RBTNode * D = root; // node we are deleted
+     //find the node from the root
+    while(D != nullptr && D -> data != val){
+        if(val > D -> data){
+            D = D -> right;
         } else{
-            curNode = curNode -> left;
+            D = D -> left;
         }
+     }
+     if(D == nullptr){
+         throw invalid_argument("Input value does not exist in the RBT\n"); 
     }
-    if(curNode == nullptr){
-        throw invalid_argument("Input value does not exist in the RBT\n"); 
-    }
-    //atp will need to keep track of the color of the node and if the node is red we can delete w/o needing to fix anything
-    //if the delted node is black we need to use a fix function
-
-    if(curNode -> left != nullptr && curNode -> right != nullptr){
-        //two child case, this is the one where we need to find the IOS and than do that whole thing
-        RBTNode * IOS = curNode -> right;
-        while(IOS -> left != nullptr){
-            IOS = IOS -> left;
-        }
-        curNode -> data = IOS -> data; // copy ios data
-        curNode = IOS; // we'll need to call remove on the IOS at a later point, probably
-    }
-    short deletedColor = curNode -> color;
-    RBTNode * parent = curNode -> parent;
-    RBTNode* child = (curNode->left != nullptr) ? curNode->left : curNode->right;
-
-    if(child != nullptr){
-        child -> parent = curNode -> parent;
-    }
-    if(curNode -> parent == nullptr){
-        root = child; // this is the case when we're removing the root of the tree
-    }else if(curNode == curNode -> parent -> left){
-        parent -> left = child;
-    }else{
-        parent -> right = child;
-    }
-    delete curNode; // kill the node
-    //if the deleted node was red we don't needa do shit
-    if(deletedColor == COLOR_BLACK){
-        RemoveFix(child, parent);
-    }
-}
-
-void RedBlackTree:: RemoveFix(RBTNode * cur, RBTNode * parent){
-    if(cur == root){
-        if(cur != nullptr){
-            cur -> color = COLOR_BLACK;
-        }
+// 1. Two-child case: swap data with IOS and recursively remove IOS
+    if (D->left != nullptr && D->right != nullptr) {
+        RBTNode* IOS = GetIOS(D);
+        int num = IOS->data;
+        Remove(IOS->data);
+        D->data = num;
         return;
     }
-    if( cur != nullptr && cur -> color == COLOR_RED){
-        cur->color = COLOR_BLACK;
+
+    // 2. Save D's color and parent BEFORE deleting D
+    int dColor = D->color;
+    RBTNode* R = RemoveReplace(D); // D is deleted inside here
+
+    // 3. Always run RemoveCheck (even if R is nullptr)
+    RemoveCheck(dColor, R);
+}
+
+RBTNode * RedBlackTree:: RemoveReplace(RBTNode * D){
+    RBTNode * parent = D -> parent;
+    RBTNode* R = (D->left != nullptr) ? D->left : D->right; // this should grab the child, regardless of direction
+    
+    if(R != nullptr){
+        R -> parent = parent;
+    }
+    if(parent == nullptr){
+        root = R;
+    }else if(D == parent -> left){
+        parent -> left = R;
+    } else{
+        parent -> right = R;
+    }
+    delete D;
+    return R;
+}
+
+
+RBTNode * RedBlackTree:: GetIOS(RBTNode * cur){
+    RBTNode * IOS = cur -> right;
+         while(IOS -> left != nullptr){
+             IOS = IOS -> left;
+        }
+        return IOS;
+}
+
+void RedBlackTree:: RemoveCheck(short DColor, RBTNode * R){
+    //brief check to see if need to deal with double blacks
+    //I hope no double blacks
+    if(R == root){
+        if(R != nullptr){
+        R -> color = COLOR_BLACK;
+        return;
+        }
+    }
+    if( DColor == COLOR_RED){
         return;
     }
-    FixDoubleBlack(cur, parent);
-}
-
-void RedBlackTree:: FixDoubleBlack(RBTNode * cur, RBTNode * parent){
-    //TODO
-    RBTNode * sibling;
-    if(parent -> left == cur){
-        sibling = parent -> right;
-    }else{
-        sibling = parent -> left;
-    } 
-
-    if(sibling -> color == COLOR_RED){
-        //this should be the fix for a red sibling
-        //rotates it so that we end up in a black sibling situation and than we go to the black
-        //sibling situation
-        parent -> color = COLOR_RED;
-        sibling -> color = COLOR_BLACK;
-        if(parent -> left = sibling){
-            RotateRight(parent);
-        } else{RotateLeft(parent);}
-        parent = cur -> parent;
-        FixDoubleBlack(cur, parent);
+    if(R -> color == COLOR_RED && R != nullptr){
+        R -> color = COLOR_BLACK;
+        return;
     }
-    //red sibling case
-
+    if(R != nullptr){
+        R -> color = COLOR_DOUBLE_BLACK;
+    }
+    FixDoubleBlack(R, R -> parent);
 }
+
+void RedBlackTree:: FixDoubleBlack(RBTNode * cur, RBTNode * parent){}
+
+// void RedBlackTree:: Remove(int val){ // I don't like how this works
+//     RBTNode * curNode = root;
+//     //find the node from the root
+//     while(curNode != nullptr && curNode -> data != val){
+//         if(val > curNode -> data){
+//             curNode = curNode -> right;
+//         } else{
+//             curNode = curNode -> left;
+//         }
+//     }
+//     if(curNode == nullptr){
+//         throw invalid_argument("Input value does not exist in the RBT\n"); 
+//     }
+//     //atp will need to keep track of the color of the node and if the node is red we can delete w/o needing to fix anything
+//     //if the delted node is black we need to use a fix function
+
+//     if(curNode -> left != nullptr && curNode -> right != nullptr){
+//         //two child case, this is the one where we need to find the IOS and than do that whole thing
+//         RBTNode * IOS = curNode -> right;
+//         while(IOS -> left != nullptr){
+//             IOS = IOS -> left;
+//         }
+//         curNode -> data = IOS -> data; // copy ios data
+//         curNode = IOS; // we'll need to call remove on the IOS at a later point, probably
+//     }
+//     short deletedColor = curNode -> color;
+//     RBTNode * parent = curNode -> parent;
+//     RBTNode* child = (curNode->left != nullptr) ? curNode->left : curNode->right; // this is some bullshits
+
+//     if(child != nullptr){
+//         child -> parent = curNode -> parent;
+//     }
+//     if(curNode -> parent == nullptr){
+//         root = child; // this is the case when we're removing the root of the tree
+//     }else if(curNode == curNode -> parent -> left){
+//         parent -> left = child;
+//     }else{
+//         parent -> right = child;
+//     }
+//     delete curNode; // kill the node
+//     //if the deleted node was red we don't needa do shit
+//     if(deletedColor == COLOR_BLACK){
+//         RemoveFix(child, parent);
+//     }
+// }
+
+// void RedBlackTree:: RemoveFix(RBTNode * cur, RBTNode * parent){
+//     if(cur == root){
+//         if(cur != nullptr){
+//             cur -> color = COLOR_BLACK;
+//         }
+//         return;
+//     }
+//     if( cur != nullptr && cur -> color == COLOR_RED){
+//         cur->color = COLOR_BLACK;
+//         return;
+//     }
+//     FixDoubleBlack(cur, parent);
+// }
+
+// void RedBlackTree:: FixDoubleBlack(RBTNode * cur, RBTNode * parent){
+//     //TODO
+//     RBTNode * sibling;
+//     if(parent -> left == cur){
+//         sibling = parent -> right;
+//     }else{
+//         sibling = parent -> left;
+//     } 
+
+//     if(sibling -> color == COLOR_RED){
+//         //this should be the fix for a red sibling
+//         //rotates it so that we end up in a black sibling situation and than we go to the black
+//         //sibling situation
+//         parent -> color = COLOR_RED;
+//         sibling -> color = COLOR_BLACK;
+//         if(parent -> left = sibling){
+//             RotateRight(parent);
+//         } else{RotateLeft(parent);}
+//         parent = cur -> parent;
+//         FixDoubleBlack(cur, parent);
+//     }
+//     //red sibling case
+
+// }
 
 
 bool RedBlackTree:: Contains(int val){ 
