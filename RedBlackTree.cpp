@@ -238,7 +238,7 @@ void RedBlackTree:: Remove(int val){
          throw invalid_argument("Input value does not exist in the RBT\n"); 
     }
 // 1. Two-child case: swap data with IOS and recursively remove IOS
-    if (D->left != nullptr && D->right != nullptr) {
+    if (D->right != nullptr && D->left != nullptr) {
         RBTNode* IOS = GetIOS(D);
         int num = IOS->data;
         Remove(IOS->data);
@@ -248,10 +248,11 @@ void RedBlackTree:: Remove(int val){
 
     // 2. Save D's color and parent BEFORE deleting D
     int dColor = D->color;
+    RBTNode * parent = D -> parent;
     RBTNode* R = RemoveReplace(D); // D is deleted inside here
 
     // 3. Always run RemoveCheck (even if R is nullptr)
-    RemoveCheck(dColor, R);
+    RemoveCheck(dColor, R, parent);
 }
 
 RBTNode * RedBlackTree:: RemoveReplace(RBTNode * D){
@@ -281,29 +282,132 @@ RBTNode * RedBlackTree:: GetIOS(RBTNode * cur){
         return IOS;
 }
 
-void RedBlackTree:: RemoveCheck(short DColor, RBTNode * R){
+void RedBlackTree:: RemoveCheck(short DColor, RBTNode * R, RBTNode * parent){
     //brief check to see if need to deal with double blacks
     //I hope no double blacks
     if(R == root){
         if(R != nullptr){
         R -> color = COLOR_BLACK;
-        return;
         }
+        return;
     }
     if( DColor == COLOR_RED){
         return;
     }
-    if(R -> color == COLOR_RED && R != nullptr){
+    if( R != nullptr && R -> color == COLOR_RED){
         R -> color = COLOR_BLACK;
         return;
     }
     if(R != nullptr){
         R -> color = COLOR_DOUBLE_BLACK;
     }
-    FixDoubleBlack(R, R -> parent);
+    FixDoubleBlack(R, parent);
 }
 
-void RedBlackTree:: FixDoubleBlack(RBTNode * cur, RBTNode * parent){}
+void RedBlackTree:: FixDoubleBlack(RBTNode * cur, RBTNode * parent){
+   // 1. Base case: Reached root
+    if (parent == nullptr || cur == root) {
+        if (cur != nullptr) {
+            cur->color = COLOR_BLACK;
+        }
+        return;
+    }
+
+    // 2. Identify side and sibling
+    bool isLeft = (cur == parent->left); // lil helper function
+    RBTNode* sibling = isLeft ? parent->right : parent->left;
+
+    // Helper lambdas for null-safe color checks
+    auto isBlack = [](RBTNode* n) { return n == nullptr || n->color == COLOR_BLACK; };
+
+    if (sibling == nullptr) {
+        if (cur != nullptr) {
+            cur->color = COLOR_BLACK; // Clear double-black on cur before moving up
+        }
+        if (parent->color == COLOR_RED) {
+            parent->color = COLOR_BLACK;
+        } else {
+            parent->color = COLOR_DOUBLE_BLACK;
+            FixDoubleBlack(parent, parent->parent);
+        }
+        return;
+    }
+
+    // Case 1: Sibling is RED
+    if (sibling->color == COLOR_RED) {
+        sibling->color = COLOR_BLACK;
+        parent->color = COLOR_RED;
+        if (isLeft) {               // Fixed: rotate TOWARD cur
+            RotateLeft(parent);
+            sibling = parent->right;
+        } else {
+            RotateRight(parent);
+            sibling = parent->left;
+        }
+    }
+
+    // Case 2: Sibling is BLACK and both children are BLACK (or nullptr)
+    if (isBlack(sibling->left) && isBlack(sibling->right)) { // Fixed: null-safe
+        sibling->color = COLOR_RED;
+        if (cur != nullptr) {
+            cur->color = COLOR_BLACK;
+        }
+        if (parent->color == COLOR_RED) {
+            parent->color = COLOR_BLACK;
+        } else if (parent != root) {
+            parent->color = COLOR_DOUBLE_BLACK;
+            FixDoubleBlack(parent, parent->parent);
+        }
+        return;
+    }
+
+    // Case 3 & 4: Sibling is BLACK and at least one child is RED
+    if (isLeft) {
+        // Case 3: Near child (left) is RED, far child (right) is BLACK
+        if (isBlack(sibling->right)) { // Fixed: null-safe
+            if (sibling->left != nullptr) {
+                sibling->left->color = COLOR_BLACK;
+            }
+            sibling->color = COLOR_RED;
+            RotateRight(sibling);
+            sibling = parent->right;
+        }
+
+        // Case 4: Far child (right) is RED
+        sibling->color = parent->color;
+        parent->color = COLOR_BLACK;
+        if (sibling->right != nullptr) {
+            sibling->right->color = COLOR_BLACK;
+        }
+        if (cur != nullptr) {
+            cur->color = COLOR_BLACK;
+        }
+        RotateLeft(parent);
+    } else {
+        // Case 3 Mirror: Near child (right) is RED, far child (left) is BLACK
+        //mirror means cur is right child
+        if (isBlack(sibling->left)) { // Fixed: null-safe
+            if (sibling->right != nullptr) {
+                sibling->right->color = COLOR_BLACK;
+            }
+            sibling->color = COLOR_RED;
+            RotateLeft(sibling);
+            sibling = parent->left;
+        }
+
+        // Case 4 Mirror: Far child (left) is RED
+        //mirror case means cur is right child
+        sibling->color = parent->color;
+        parent->color = COLOR_BLACK;
+        if (sibling->left != nullptr) {
+            sibling->left->color = COLOR_BLACK;
+        }
+        if (cur != nullptr) {
+            cur->color = COLOR_BLACK;
+        }
+        RotateRight(parent);
+    }
+}
 
 // void RedBlackTree:: Remove(int val){ // I don't like how this works
 //     RBTNode * curNode = root;

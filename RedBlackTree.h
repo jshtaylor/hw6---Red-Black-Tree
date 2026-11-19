@@ -48,7 +48,7 @@ class RedBlackTree{
 
     void FixDoubleBlack(RBTNode * cur, RBTNode * parent);
     RBTNode * RemoveReplace(RBTNode * D);
-    void RemoveCheck(short DColor, RBTNode * R);
+    void RemoveCheck(short DColor, RBTNode * R, RBTNode * parent);
     RBTNode * GetIOS(RBTNode * cur);
     
     
